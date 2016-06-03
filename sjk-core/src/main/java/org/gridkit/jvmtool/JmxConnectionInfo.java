@@ -38,13 +38,16 @@ import com.beust.jcommander.Parameter;
 public class JmxConnectionInfo {
 
     private CommandLauncher commandHost;
-    
+
 	@Parameter(names = {"-p", "--pid"}, description = "JVM process PID")
 	private Long pid;
 	
 	@Parameter(names = {"-s", "--socket"}, description = "Socket address for JMX port (host:port)")
-	private String sockAddr; 
-	
+	private String sockAddr;
+
+	@Parameter(names = {"-h", "--http"}, description = "Http address for JMX port (host:port)")
+	private String httpAddr;
+
 	@Parameter(names = {"--user"}, description="User for JMX authentication (only for socket connection)")
 	private String user = null;
 
@@ -60,24 +63,35 @@ public class JmxConnectionInfo {
 	}
 	
 	public MBeanServerConnection getMServer() {
-		if (pid == null && sockAddr == null) {
+		if (pid == null && sockAddr == null && httpAddr == null) {
 			commandHost.failAndPrintUsage("JVM process is not specified");
 		}
 		
-		if (pid != null && sockAddr != null) {
-		    commandHost.failAndPrintUsage("You can specify eigther PID or JMX socket connection");
+		if (pid != null && (sockAddr != null || httpAddr != null)) {
+		    commandHost.failAndPrintUsage("You can specify eigther PID or JMX socket or http connection");
 		}
 
-		if (pid != null) {
+		if (sockAddr != null && httpAddr != null) {
+			commandHost.failAndPrintUsage("You can specify eigther JMX socket or http connection");
+		}
+
+		boolean isLocalConnect = (pid != null);
+
+		if (isLocalConnect) {
+			// Local connect.
 			MBeanServerConnection mserver = AttachManager.getDetails(pid).getMBeans();
 			if (mserver == null) {
 			    commandHost.fail("Failed to access MBean server: " + pid);
 			}
             return mserver;
 		}
-		else if (sockAddr != null) {
-			String host = host(sockAddr);
-			int port = port(sockAddr);
+		else {
+			// Remote connect.
+			boolean isHttpConnect = (httpAddr != null);
+
+			final String addr = (isHttpConnect ? httpAddr: sockAddr);
+			String host = host(addr);
+			int port = port(addr);
 			Map<String, Object> env = null;
 			if (user != null || password != null) {
 				if (user == null || password == null) {
@@ -85,28 +99,30 @@ public class JmxConnectionInfo {
 				}
 				env = Collections.singletonMap(JMXConnector.CREDENTIALS, (Object)new String[]{user, password});
 			}
-			MBeanServerConnection mserver = connectJmx(host, port, env);
+
+			final String connectionString = (isHttpConnect ?
+					String.format("service:jmx:http-remoting-jmx://%s:%d", host, port):
+					String.format("service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi", host, port)
+			);
+
+			MBeanServerConnection mserver = connectJmx(host, port, env, connectionString);
             if (mserver == null) {
                 commandHost.fail("Failed to access MBean server: " + host + ":" + port);
             }
             return mserver;
 		}
-		else {
-			throw new UnsupportedOperationException();
-		}		
 	}
 
 	@SuppressWarnings("resource")
-	private MBeanServerConnection connectJmx(String host, int port, Map<String, Object> props) {
+	private MBeanServerConnection connectJmx(String host, int port, Map<String, Object> props, String connectionString) {
 		try {
-			final String uri = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi";
-			JMXServiceURL jmxurl = new JMXServiceURL(uri);						
+			JMXServiceURL jmxurl = new JMXServiceURL(connectionString);
 			JMXConnector conn = props == null ? JMXConnectorFactory.connect(jmxurl) : JMXConnectorFactory.connect(jmxurl, props);
 			// TODO credentials
 			MBeanServerConnection mserver = conn.getMBeanServerConnection();
 			return mserver;
 		} catch (MalformedURLException e) {
-		    commandHost.fail("JMX Connection failed: " + e.toString(), e);
+			commandHost.fail("JMX Connection failed: " + e.toString(), e);
 		} catch (IOException e) {
 		    commandHost.fail("JMX Connection failed: " + e.toString(), e);
 		}
