@@ -37,9 +37,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
- * Stack capture command.
+ * Stack capture command (text dump).
  *  
- * @author Alexey Ragozin (alexey.ragozin@gmail.com)
+ * @author drmiller (drmiller.developer@gmail.com)
  */
 public class StackCaptureTextCmd implements CmdRef {
 
