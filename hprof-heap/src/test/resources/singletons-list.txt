@@ -813,7 +813,7 @@ com.sun.xml.bind.v2.schemagen.Form$2
 com.google.common.base.Joiner$1
 org.jboss.el.util.ReferenceCache$StrongReferenceFactory
 com.sun.xml.bind.v2.schemagen.Form$1
-org.hibernate.cache.infinispan.timestamp.TimestampsRegionImpl
+org.hibernate.cache.infinispan.getTimestamp.TimestampsRegionImpl
 javax.faces.component.UISelectItems$PropertyKeys
 org.jboss.as.ejb3.subsystem.deployment.SingletonBeanDeploymentResourceDefinition
 org.jboss.as.remoting.GenericOutboundConnectionRemoveHandler
@@ -5335,7 +5335,7 @@ com.sun.org.apache.bcel.internal.generic.BALOAD
 org.richfaces.webapp.ResourceServlet
 org.jboss.as.webservices.dmr.WSEndpointMetrics
 org.jboss.as.server.ApplicationServerService
-org.hibernate.cache.infinispan.timestamp.TimestampTypeOverrides
+org.hibernate.cache.infinispan.getTimestamp.TimestampTypeOverrides
 org.apache.commons.collections.ArrayStack
 org.eclipse.equinox.internal.app.AppPersistence
 sun.nio.cs.ext.JIS_X_0212

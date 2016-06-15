@@ -4,18 +4,20 @@ import java.lang.Thread.State;
 
 public interface ThreadSnapshot {
 
-    public long threadId();
+    long getThreadId();
+    void setThreadId(long threadId);
 
     /** may be <code>null</code> */
-    public String threadName();
+    String getThreadName();
     
-    public long timestamp();
-    
-    public StackFrameList stackTrace();
+    long getTimestamp();
+    void setTimestamp(long timestamp);
+
+    public StackFrameList getStackTrace();
     
     /** may be <code>null</code> */
-    public State threadState();
+    public State getThreadState();
     
-    public CounterCollection counters();
+    public CounterArray getCounters();
         
 }

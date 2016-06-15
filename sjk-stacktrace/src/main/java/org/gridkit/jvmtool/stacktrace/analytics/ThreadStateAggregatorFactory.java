@@ -1,8 +1,8 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
-import java.lang.Thread.State;
-
 import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+
+import java.lang.Thread.State;
 
 class ThreadStateAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggregatorFactory {
 
@@ -23,7 +23,7 @@ class ThreadStateAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAg
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
         ++total;
-        if (threadInfo.threadState() == state) {
+        if (threadInfo.getThreadState() == state) {
             ++matched;
         }
     }

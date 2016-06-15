@@ -240,7 +240,7 @@ Example
 
     > java -jar sjk.jar mx -p 6344 -mc -b java.lang:type=Threading -op dumpAllThreads -a false false
     
-    blockedCount|blockedTime|inNative|lockInfo                                |lockName                                |lockOwnerId|lockOwnerName|lockedMonitors|lockedSynchronizers|stackTrace                              |suspended|threadId|threadName                              |threadState  |waitedCount|waitedTime
+    blockedCount|blockedTime|inNative|lockInfo                                |lockName                                |lockOwnerId|lockOwnerName|lockedMonitors|lockedSynchronizers|getStackTrace                              |suspended|getThreadId|getThreadName                              |getThreadState  |waitedCount|waitedTime
     ------------+-----------+--------+----------------------------------------+----------------------------------------+-----------+-------------+--------------+-------------------+----------------------------------------+---------+--------+----------------------------------------+-------------+-----------+----------
     2           |0          |false   |{className=[I,identityHashCode=17460180}|[I@10a6bd4                              |-1         |null         |              |                   |{className=java.lang.Object,fileName=...|false    |87816   |JMX server connection timeout 87816     |TIMED_WAITING|3          |64        
     3           |0          |false   |{className=[I,identityHashCode=19740445}|[I@12d371d                              |-1         |null         |              |                   |{className=java.lang.Object,fileName=...|false    |87810   |JMX server connection timeout 87810     |TIMED_WAITING|4          |42312     

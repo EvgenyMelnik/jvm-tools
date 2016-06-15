@@ -16,13 +16,13 @@ class FrequencyHMAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAg
 
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
-        if (threadInfo.timestamp() > lastTimestamp) {
-            long delta = threadInfo.timestamp() - lastTimestamp;
+        if (threadInfo.getTimestamp() > lastTimestamp) {
+            long delta = threadInfo.getTimestamp() - lastTimestamp;
             double rcp = 1000d / delta;
             count += 1;
             reciproicalTotal += rcp;
         }
-        lastTimestamp = threadInfo.timestamp();
+        lastTimestamp = threadInfo.getTimestamp();
     }
 
     @Override

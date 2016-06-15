@@ -19,7 +19,7 @@ class ThreadNameAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAgg
     
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
-        name = threadInfo.threadName();
+        name = threadInfo.getThreadName();
         if (name != null && name.length() > lengthLimit) {
             name = name.substring(0, lengthLimit);
         }

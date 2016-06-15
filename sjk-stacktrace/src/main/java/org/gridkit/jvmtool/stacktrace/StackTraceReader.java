@@ -18,7 +18,7 @@ public interface StackTraceReader {
 
     public State getThreadState();
 
-    public CounterCollection getCounters();
+    public CounterArray getCounters();
 
     public StackTraceElement[] getTrace();
 
@@ -51,7 +51,7 @@ public interface StackTraceReader {
         }
 
         @Override
-        public CounterCollection getCounters() {
+        public CounterArray getCounters() {
             return getReader().getCounters();
         }
 

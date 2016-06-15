@@ -1,15 +1,11 @@
 package org.gridkit.jvmtool.stacktrace;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+
+import java.io.*;
 
 public class StateTraceReaderTest {
 
@@ -45,7 +41,7 @@ public class StateTraceReaderTest {
 
         int n = 0;
         while(reader.isLoaded()) {
-//            System.out.println(reader.getCounters() + " - " + reader.getThreadName());
+//            System.out.println(getReader.getCounters() + " - " + getReader.getThreadName());
             reader.loadNext();
             ++n;
         }

@@ -1,5 +1,11 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
+import org.gridkit.jvmtool.stacktrace.CounterArray;
+import org.gridkit.jvmtool.stacktrace.StackFrame;
+import org.gridkit.jvmtool.stacktrace.StackFrameList;
+import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+import org.gridkit.jvmtool.stacktrace.analytics.ClassificatorAST.*;
+
 import java.lang.Thread.State;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,17 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.gridkit.jvmtool.stacktrace.CounterCollection;
-import org.gridkit.jvmtool.stacktrace.StackFrame;
-import org.gridkit.jvmtool.stacktrace.StackFrameList;
-import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
-import org.gridkit.jvmtool.stacktrace.analytics.ClassificatorAST.AndCombinatorFilter;
-import org.gridkit.jvmtool.stacktrace.analytics.ClassificatorAST.AnyOfFrameMatcher;
-import org.gridkit.jvmtool.stacktrace.analytics.ClassificatorAST.LastFollowedFilter;
-import org.gridkit.jvmtool.stacktrace.analytics.ClassificatorAST.LastNotFollowedFilter;
-import org.gridkit.jvmtool.stacktrace.analytics.ClassificatorAST.OrCombinatorFilter;
-import org.gridkit.jvmtool.stacktrace.analytics.ClassificatorAST.PatternFilter;
 
 /**
  * Default implementation of factory is producing thread safe filter
@@ -178,7 +173,7 @@ public class BasicFilterFactory {
         return new ThreadSnapshotFilter() {
             @Override
             public boolean evaluate(ThreadSnapshot snapshot) {
-                for(StackFrame frame: snapshot.stackTrace()) {
+                for(StackFrame frame: snapshot.getStackTrace()) {
                     if (matcher.evaluate(frame)) {
                         return true;
                     }
@@ -250,7 +245,7 @@ public class BasicFilterFactory {
 
         @Override
         public int matchNext(ThreadSnapshot snap, int matchFrom) {
-            StackFrameList trace = snap.stackTrace();
+            StackFrameList trace = snap.getStackTrace();
             if (matchFrom > 0) {
                 // assume that match have been found already
                 return -1;
@@ -274,7 +269,7 @@ public class BasicFilterFactory {
 
         @Override
         public int matchNext(ThreadSnapshot snap, int matchFrom) {
-            StackFrameList trace = snap.stackTrace();
+            StackFrameList trace = snap.getStackTrace();
             if (matchFrom > 0) {
                 // assume that match have been found already
                 return -1;
@@ -309,7 +304,7 @@ public class BasicFilterFactory {
                 n = m;
             }
             if (n >= 0) {
-                StackFrameList remained = snapshot.stackTrace();
+                StackFrameList remained = snapshot.getStackTrace();
                 remained = remained.fragment(0, n);
                 return tailFilter.evaluate(new ThreadSnapProxy(snapshot, remained)); 
             }
@@ -325,7 +320,7 @@ public class BasicFilterFactory {
                 int m = matcher.matchNext(snap, n + 1);
                 if (m < 0) {
                     if (n >= matchFrom) {
-                        StackFrameList remained = snap.stackTrace();
+                        StackFrameList remained = snap.getStackTrace();
                         remained = remained.fragment(0, n);
                         if (tailFilter.evaluate(new ThreadSnapProxy(snap, remained))) {
                             return n;
@@ -426,29 +421,39 @@ public class BasicFilterFactory {
             this.stack = stack;
         }
 
-        public long threadId() {
-            return snap.threadId();
-        }
-
-        public String threadName() {
-            return snap.threadName();
-        }
-
-        public long timestamp() {
-            return snap.timestamp();
-        }
-
-        public StackFrameList stackTrace() {
-            return stack != null ? stack : snap.stackTrace();
-        }
-
-        public State threadState() {
-            return snap.threadState();
+        public long getThreadId() {
+            return snap.getThreadId();
         }
 
         @Override
-        public CounterCollection counters() {
-            return snap.counters();
+        public void setThreadId(long threadId) {
+            this.snap.setThreadId(threadId);
+        }
+
+        public String getThreadName() {
+            return snap.getThreadName();
+        }
+
+        public long getTimestamp() {
+            return snap.getTimestamp();
+        }
+
+        @Override
+        public void setTimestamp(long timestamp) {
+            snap.setTimestamp(timestamp);
+        }
+
+        public StackFrameList getStackTrace() {
+            return stack != null ? stack : snap.getStackTrace();
+        }
+
+        public State getThreadState() {
+            return snap.getThreadState();
+        }
+
+        @Override
+        public CounterArray getCounters() {
+            return snap.getCounters();
         }
     }
     

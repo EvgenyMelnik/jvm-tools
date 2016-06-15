@@ -1,12 +1,12 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
-import java.io.IOException;
-import java.lang.Thread.State;
-
-import org.gridkit.jvmtool.stacktrace.CounterCollection;
+import org.gridkit.jvmtool.stacktrace.CounterArray;
 import org.gridkit.jvmtool.stacktrace.ReaderProxy;
 import org.gridkit.jvmtool.stacktrace.StackFrameList;
 import org.gridkit.jvmtool.stacktrace.StackTraceReader;
+
+import java.io.IOException;
+import java.lang.Thread.State;
 
 public class FilteredStackTraceReader extends ReaderProxy implements StackTraceReader {
 
@@ -24,7 +24,7 @@ public class FilteredStackTraceReader extends ReaderProxy implements StackTraceR
     }
 
     @Override
-    protected StackTraceReader reader() {
+    protected StackTraceReader getReader() {
         return this;
     }
 
@@ -54,7 +54,7 @@ public class FilteredStackTraceReader extends ReaderProxy implements StackTraceR
     }
 
     @Override
-    public CounterCollection getCounters() {
+    public CounterArray getCounters() {
         return reader.getCounters();
     }
 

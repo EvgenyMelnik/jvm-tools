@@ -15,22 +15,17 @@
  */
 package org.gridkit.jvmtool;
 
-import java.io.Serializable;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
+import org.gridkit.jvmtool.stacktrace.ThreadCapture;
 
 import javax.management.JMX;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-
-import org.gridkit.jvmtool.stacktrace.ThreadCapture;
+import java.io.Serializable;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Thread stack sampler.
@@ -206,9 +201,9 @@ public class ThreadStackSampler {
 
         public void copyToSnapshot(ThreadCapture snap) {
             snap.reset();
-            snap.threadId = threadId;
-            snap.timestamp = timestamp;
-            snap.elements = getTrace();
+            snap.setThreadId(threadId);
+            snap.setTimestamp(timestamp);
+            snap.setElements(getTrace());
         }
 	}
 }

@@ -1,8 +1,8 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
-import java.util.TimeZone;
-
 import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+
+import java.util.TimeZone;
 
 public class TimeRangeFilter implements ThreadSnapshotFilter {
 
@@ -14,6 +14,6 @@ public class TimeRangeFilter implements ThreadSnapshotFilter {
 
     @Override
     public boolean evaluate(ThreadSnapshot snapshot) {
-        return checker.evaluate(snapshot.timestamp());
+        return checker.evaluate(snapshot.getTimestamp());
     }
 }

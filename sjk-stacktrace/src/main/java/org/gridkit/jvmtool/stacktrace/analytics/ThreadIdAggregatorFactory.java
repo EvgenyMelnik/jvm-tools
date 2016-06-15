@@ -13,7 +13,7 @@ class ThreadIdAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggre
     
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
-        id = threadInfo.threadId();
+        id = threadInfo.getThreadId();
     }
 
     @Override

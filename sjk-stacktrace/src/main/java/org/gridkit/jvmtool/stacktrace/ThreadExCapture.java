@@ -1,71 +1,43 @@
 package org.gridkit.jvmtool.stacktrace;
 
-import java.lang.Thread.State;
+import java.lang.management.LockInfo;
+import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ThreadCapture implements ThreadSnapshot {
+public class ThreadExCapture extends ThreadCapture {
 
-    protected long threadId;
-    protected String threadName;
-    protected long timestamp;
-    protected StackTraceElement[] elements;
-    protected CounterArray counters = new CounterArray();
-    protected State state;
-    
-    @Override
-    public long getThreadId() {
-        return threadId;
+    private LockInfo lock;
+    private boolean isNative;
+    private MonitorInfo[] lockedMonitors;
+    private LockInfo[] lockedSynchronizers;
+
+    public LockInfo getLock() {
+        return lock;
     }
 
-    @Override
-    public void setThreadId(long threadId) {
-        this.threadId = threadId;
+    public LockInfo[] getLockedSynchronizers() {
+        return lockedSynchronizers;
     }
 
-    @Override
-    public String getThreadName() {
-        return threadName;
+    public MonitorInfo[] getLockedMonitors() {
+        return lockedMonitors;
     }
 
-    @Override
-    public long getTimestamp() {
-        return timestamp;
+    public boolean isNative() {
+        return isNative;
     }
 
-    public void setTimestamp(long timestamp){
-        this.timestamp = timestamp;
-    }
-
-    @Override
-    public StackFrameList getStackTrace() {
-        return new StackProxy(elements);
-    }
-
-    @Override
-    public State getThreadState() {
-        return state;
-    }
-
-    @Override
-    public CounterArray getCounters() {
-        return counters;
-    }
-
-    public StackTraceElement[] getElements() {
-        return elements;
-    }
-
-    public void setElements(StackTraceElement[] elements) {
-        this.elements = elements;
-    }
-
-    void copyFrom(ThreadInfo info) {
+    public void copyFrom(ThreadInfo info) {
         threadId = info.getThreadId();
         threadName = info.getThreadName();
         elements = info.getStackTrace();
         state = info.getThreadState();
+        lock = info.getLockInfo();
+        isNative = info.isInNative();
+        lockedMonitors = info.getLockedMonitors();
+        lockedSynchronizers = info.getLockedSynchronizers();
 
         if (info.getBlockedCount() > 0) {
             counters.set(ThreadCounters.BLOCKED_COUNTER, info.getBlockedCount());
@@ -91,13 +63,17 @@ public class ThreadCapture implements ThreadSnapshot {
         elements = null;
         counters.reset();
         state = null;
+        lock = null;
+        isNative = false;
+        lockedMonitors = null;
+        lockedSynchronizers = null;
     }
     
-    private class StackProxy implements StackFrameList {
+    class StackProxy implements StackFrameList {
 
         StackTraceElement[] stack;
         
-        StackProxy(StackTraceElement[] stack) {
+        public StackProxy(StackTraceElement[] stack) {
             this.stack = stack;
         }
 
@@ -153,11 +129,11 @@ public class ThreadCapture implements ThreadSnapshot {
         }
     }
     
-    private static class StackFrameWrapper extends StackFrame {
+    static class StackFrameWrapper extends StackFrame {
 
         StackTraceElement ste;
         
-        StackFrameWrapper(StackTraceElement ste) {
+        public StackFrameWrapper(StackTraceElement ste) {
             super(ste);
             this.ste = ste;
         }

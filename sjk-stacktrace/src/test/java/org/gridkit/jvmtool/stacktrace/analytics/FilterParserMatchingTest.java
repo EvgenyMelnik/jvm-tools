@@ -1,15 +1,6 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
-import java.lang.Thread.State;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.gridkit.jvmtool.stacktrace.CounterCollection;
-import org.gridkit.jvmtool.stacktrace.StackFrame;
-import org.gridkit.jvmtool.stacktrace.StackFrameArray;
-import org.gridkit.jvmtool.stacktrace.StackFrameList;
-import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+import org.gridkit.jvmtool.stacktrace.*;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -17,6 +8,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.lang.Thread.State;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -180,32 +176,42 @@ public class FilterParserMatchingTest {
         return new ThreadSnapshot() {
             
             @Override
-            public long timestamp() {
+            public long getTimestamp() {
                 return 0;
             }
-            
+
             @Override
-            public State threadState() {
+            public void setTimestamp(long timestamp) {
+
+            }
+
+            @Override
+            public State getThreadState() {
                 return null;
             }
             
             @Override
-            public String threadName() {
+            public String getThreadName() {
                 return null;
             }
             
             @Override
-            public long threadId() {
+            public long getThreadId() {
                 return 0;
             }
-            
+
             @Override
-            public StackFrameList stackTrace() {
+            public void setThreadId(long threadId) {
+
+            }
+
+            @Override
+            public StackFrameList getStackTrace() {
                 return trace.frameList();
             }
             
             @Override
-            public CounterCollection counters() {
+            public CounterArray getCounters() {
                 return null;
             }
         };

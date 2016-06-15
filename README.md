@@ -3,7 +3,7 @@ Swiss Java Knife
 
 SJK is a command line tool for JVM diagnostic, troubleshooting and profiling.
 
-SJK exploits standard diagnostic interfaces of JVM (such as JMX, JVM attach and perf counters) and add some more logic on top 
+SJK exploits standard diagnostic interfaces of JVM (such as JMX, JVM attach and perf getCounters) and add some more logic on top
 to be useful for common troubleshooting case.
 
 

@@ -15,6 +15,7 @@
  */
 package org.gridkit.jvmtool.stacktrace;
 
+import javax.management.ObjectName;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.management.ThreadInfo;
@@ -25,8 +26,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.management.ObjectName;
 
 /**
  * Thread stack sampler.
@@ -263,10 +262,14 @@ public class ThreadDumpSampler {
 	            // ignore
 	        }
 	    }
+
+        // TODO: создать более расширенный ThreadCapture
+        // TODO: сделать текстовый writer
+
 	    ThreadCapture ts = new ThreadCapture();
 	    for(ThreadInfo ti: dump) {
 	        ts.reset();
-	        ts.timestamp = timestamp;
+	        ts.setTimestamp(timestamp);
 	        ts.copyFrom(ti);
 	        for (CounterCollector cc: collectors) {
 	            try {
@@ -369,8 +372,8 @@ public class ThreadDumpSampler {
 
         public void copyToSnapshot(ThreadCapture snap) {
             snap.reset();
-            snap.threadId = threadId;
-            snap.timestamp = timestamp;
+            snap.setThreadId(threadId);
+            snap.setTimestamp(timestamp);
             snap.elements = getTrace();
         }
 	}
@@ -457,7 +460,7 @@ public class ThreadDumpSampler {
 
         @Override
         public void fillIntoSnapshot(ThreadCapture snap) {
-            int n = indexOf(snap.threadId);
+            int n = indexOf(snap.getThreadId());
             String counterKey;            
             switch(counter) {
                 case CPU_TIME: counterKey = ThreadCounters.CPU_TIME_MS; break;
@@ -469,7 +472,7 @@ public class ThreadDumpSampler {
             if (v >= 0 && counter != CounterType.ALLOCATED_BYTES) {
                 v = TimeUnit.NANOSECONDS.toMillis(v);
             }
-            snap.counters.set(counterKey, v);
+            snap.getCounters().set(counterKey, v);
         }
 
         private int indexOf(long threadId) {

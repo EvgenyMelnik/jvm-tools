@@ -15,15 +15,10 @@
  */
 package org.gridkit.jvmtool.stacktrace.analytics.flame;
 
-import java.lang.Thread.State;
-
-import org.gridkit.jvmtool.stacktrace.CounterCollection;
-import org.gridkit.jvmtool.stacktrace.GenericStackElement;
-import org.gridkit.jvmtool.stacktrace.StackFrame;
-import org.gridkit.jvmtool.stacktrace.StackFrameArray;
-import org.gridkit.jvmtool.stacktrace.StackFrameList;
-import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+import org.gridkit.jvmtool.stacktrace.*;
 import org.gridkit.jvmtool.stacktrace.analytics.ThreadSnapshotFilter;
+
+import java.lang.Thread.State;
 
 /**
  * {@link FlameColorPicker} for {@link FlameGraphGenerator}. Rainbow color picker
@@ -80,32 +75,42 @@ public class RainbowColorPicker implements FlameColorPicker {
         }
         
         @Override
-        public long threadId() {
+        public long getThreadId() {
             return 0;
         }
 
         @Override
-        public String threadName() {
+        public void setThreadId(long threadId) {
+
+        }
+
+        @Override
+        public String getThreadName() {
             return null;
         }
 
         @Override
-        public long timestamp() {
+        public long getTimestamp() {
             return 0;
         }
 
         @Override
-        public StackFrameList stackTrace() {
+        public void setTimestamp(long timestamp) {
+
+        }
+
+        @Override
+        public StackFrameList getStackTrace() {
             return trace;
         }
 
         @Override
-        public State threadState() {
+        public State getThreadState() {
             return null;
         }
 
         @Override
-        public CounterCollection counters() {
+        public CounterArray getCounters() {
             return null;
         }
     }

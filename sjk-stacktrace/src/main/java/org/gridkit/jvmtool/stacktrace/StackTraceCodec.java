@@ -15,21 +15,9 @@
  */
 package org.gridkit.jvmtool.stacktrace;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.Thread.State;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -144,7 +132,7 @@ public class StackTraceCodec {
         }
 
         @Override
-        public CounterCollection getCounters() {
+        public CounterArray getCounters() {
             if (current == null) {
                 new NoSuchElementException();
             }
@@ -201,23 +189,23 @@ public class StackTraceCodec {
 
         @Override
         public void write(ThreadSnapshot snap) throws IOException {
-            for(StackFrame ste: snap.stackTrace()) {
+            for(StackFrame ste: snap.getStackTrace()) {
                 intern(ste.toStackTraceElement());
             }
-            for(String ckey: snap.counters()) {
+            for(String ckey: snap.getCounters()) {
                 ensureCounter(ckey);
             }
             int threadNameRef = 0;
-            if (snap.threadName() != null) {
-                threadNameRef = internDyn(snap.threadName());
+            if (snap.getThreadName() != null) {
+                threadNameRef = internDyn(snap.getThreadName());
             }
             dos.writeByte(TAG_TRACE);
-            writeVarLong(dos, snap.threadId());
+            writeVarLong(dos, snap.getThreadId());
             writeVarInt(dos, threadNameRef);
-            writeTimestamp(dos, snap.timestamp());
-            writeState(snap.threadState());
-            writeCounters(snap.counters());
-            writeTrace(snap.stackTrace());
+            writeTimestamp(dos, snap.getTimestamp());
+            writeState(snap.getThreadState());
+            writeCounters(snap.getCounters());
+            writeTrace(snap.getStackTrace());
         }
 
         private void writeCounters(CounterCollection counters) throws IOException {
@@ -413,7 +401,7 @@ public class StackTraceCodec {
         }
 
         @Override
-        public CounterCollection getCounters() {
+        public CounterArray getCounters() {
             return CounterArray.EMPTY;
         }
 
@@ -552,7 +540,7 @@ public class StackTraceCodec {
         }
 
         @Override
-        public CounterCollection getCounters() {
+        public CounterArray getCounters() {
             return counters;
         }
 

@@ -1,10 +1,10 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.gridkit.jvmtool.stacktrace.ThreadCounters;
 import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 class CpuAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggregatorFactory {
 
@@ -17,24 +17,24 @@ class CpuAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggregator
     
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
-        if (threadInfo.counters().getValue(ThreadCounters.CPU_TIME_MS) != Long.MIN_VALUE) {
-            ThreadTrack tt = info.get(threadInfo.threadId());
+        if (threadInfo.getCounters().getValue(ThreadCounters.CPU_TIME_MS) != Long.MIN_VALUE) {
+            ThreadTrack tt = info.get(threadInfo.getThreadId());
             if (tt == null) {
                 tt = new ThreadTrack();
-                tt.firstTimestamp = threadInfo.timestamp();
-                tt.lastTimestamp = threadInfo.timestamp();
-                tt.fisrtCPU = threadInfo.counters().getValue(ThreadCounters.CPU_TIME_MS);
-                tt.lastCPU = threadInfo.counters().getValue(ThreadCounters.CPU_TIME_MS);
-                info.put(threadInfo.threadId(), tt);
+                tt.firstTimestamp = threadInfo.getTimestamp();
+                tt.lastTimestamp = threadInfo.getTimestamp();
+                tt.fisrtCPU = threadInfo.getCounters().getValue(ThreadCounters.CPU_TIME_MS);
+                tt.lastCPU = threadInfo.getCounters().getValue(ThreadCounters.CPU_TIME_MS);
+                info.put(threadInfo.getThreadId(), tt);
             }
             else {
-                if (tt.firstTimestamp > threadInfo.timestamp()) {
-                    tt.firstTimestamp = threadInfo.timestamp();
-                    tt.fisrtCPU = threadInfo.counters().getValue(ThreadCounters.CPU_TIME_MS);
+                if (tt.firstTimestamp > threadInfo.getTimestamp()) {
+                    tt.firstTimestamp = threadInfo.getTimestamp();
+                    tt.fisrtCPU = threadInfo.getCounters().getValue(ThreadCounters.CPU_TIME_MS);
                 }
-                if (tt.lastTimestamp < threadInfo.timestamp()) {
-                    tt.lastTimestamp = threadInfo.timestamp();
-                    tt.lastCPU = threadInfo.counters().getValue(ThreadCounters.CPU_TIME_MS);
+                if (tt.lastTimestamp < threadInfo.getTimestamp()) {
+                    tt.lastTimestamp = threadInfo.getTimestamp();
+                    tt.lastCPU = threadInfo.getCounters().getValue(ThreadCounters.CPU_TIME_MS);
                 }
             }
         }

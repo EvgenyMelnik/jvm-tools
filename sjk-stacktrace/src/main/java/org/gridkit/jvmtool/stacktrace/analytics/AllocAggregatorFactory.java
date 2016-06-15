@@ -1,10 +1,10 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.gridkit.jvmtool.stacktrace.ThreadCounters;
 import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 class AllocAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggregatorFactory {
 
@@ -17,24 +17,24 @@ class AllocAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggregat
     
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
-        if (threadInfo.counters().getValue(ThreadCounters.ALLOCATED_BYTES) != Long.MIN_VALUE) {
-            ThreadTrack tt = info.get(threadInfo.threadId());
+        if (threadInfo.getCounters().getValue(ThreadCounters.ALLOCATED_BYTES) != Long.MIN_VALUE) {
+            ThreadTrack tt = info.get(threadInfo.getThreadId());
             if (tt == null) {
                 tt = new ThreadTrack();
-                tt.firstTimestamp = threadInfo.timestamp();
-                tt.lastTimestamp = threadInfo.timestamp();
-                tt.fisrtAlloc = threadInfo.counters().getValue(ThreadCounters.ALLOCATED_BYTES);
-                tt.lastAlloc = threadInfo.counters().getValue(ThreadCounters.ALLOCATED_BYTES);
-                info.put(threadInfo.threadId(), tt);
+                tt.firstTimestamp = threadInfo.getTimestamp();
+                tt.lastTimestamp = threadInfo.getTimestamp();
+                tt.fisrtAlloc = threadInfo.getCounters().getValue(ThreadCounters.ALLOCATED_BYTES);
+                tt.lastAlloc = threadInfo.getCounters().getValue(ThreadCounters.ALLOCATED_BYTES);
+                info.put(threadInfo.getThreadId(), tt);
             }
             else {
-                if (tt.firstTimestamp > threadInfo.timestamp()) {
-                    tt.firstTimestamp = threadInfo.timestamp();
-                    tt.fisrtAlloc = threadInfo.counters().getValue(ThreadCounters.ALLOCATED_BYTES);
+                if (tt.firstTimestamp > threadInfo.getTimestamp()) {
+                    tt.firstTimestamp = threadInfo.getTimestamp();
+                    tt.fisrtAlloc = threadInfo.getCounters().getValue(ThreadCounters.ALLOCATED_BYTES);
                 }
-                if (tt.lastTimestamp < threadInfo.timestamp()) {
-                    tt.lastTimestamp = threadInfo.timestamp();
-                    tt.lastAlloc = threadInfo.counters().getValue(ThreadCounters.ALLOCATED_BYTES);
+                if (tt.lastTimestamp < threadInfo.getTimestamp()) {
+                    tt.lastTimestamp = threadInfo.getTimestamp();
+                    tt.lastAlloc = threadInfo.getCounters().getValue(ThreadCounters.ALLOCATED_BYTES);
                 }
             }
         }

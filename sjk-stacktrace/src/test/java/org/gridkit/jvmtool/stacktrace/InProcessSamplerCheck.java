@@ -1,10 +1,10 @@
 package org.gridkit.jvmtool.stacktrace;
 
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 
 public class InProcessSamplerCheck {
 
@@ -16,7 +16,7 @@ public class InProcessSamplerCheck {
             
             @Override
             public void write(ThreadSnapshot snap) throws IOException {
-                Assert.assertTrue(snap.counters().getValue(ThreadCounters.ALLOCATED_BYTES) >= 0);
+                Assert.assertTrue(snap.getCounters().getValue(ThreadCounters.ALLOCATED_BYTES) >= 0);
             }
             
             @Override

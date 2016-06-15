@@ -1,9 +1,9 @@
 package org.gridkit.jvmtool.stacktrace.analytics;
 
+import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
+
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
 
 public class ThreadSplitAggregator {
 
@@ -16,7 +16,7 @@ public class ThreadSplitAggregator {
     }
     
     public void feed(ThreadSnapshot threadDump) {
-        ThreadTrack tt = track(threadDump.threadId());
+        ThreadTrack tt = track(threadDump.getThreadId());
         process(tt, threadDump);
     }
     
@@ -37,7 +37,7 @@ public class ThreadSplitAggregator {
         for(ThreadDumpAggregator tda: tt.aggregations) {
             tda.aggregate(threadDump);
         }
-        tt.threadName = threadDump.threadName();
+        tt.threadName = threadDump.getThreadName();
     }
 
     public Object[][] report() {

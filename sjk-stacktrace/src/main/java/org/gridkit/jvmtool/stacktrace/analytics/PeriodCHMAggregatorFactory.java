@@ -16,13 +16,13 @@ class PeriodCHMAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggr
 
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
-        if (threadInfo.timestamp() > lastTimestamp) {
-            double delta = 0.001d * (threadInfo.timestamp() - lastTimestamp);
+        if (threadInfo.getTimestamp() > lastTimestamp) {
+            double delta = 0.001d * (threadInfo.getTimestamp() - lastTimestamp);
             total += delta;
             totalSquares += delta * delta;
             count += 1;
         }
-        lastTimestamp = threadInfo.timestamp();
+        lastTimestamp = threadInfo.getTimestamp();
     }
 
     @Override

@@ -15,6 +15,17 @@
  */
 package org.gridkit.jvmtool.cmd;
 
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
+import org.gridkit.jvmtool.GlobHelper;
+import org.gridkit.jvmtool.JmxConnectionInfo;
+import org.gridkit.jvmtool.cli.CommandLauncher;
+import org.gridkit.jvmtool.cli.CommandLauncher.CmdRef;
+import org.gridkit.jvmtool.cli.TimeIntervalConverter;
+import org.gridkit.jvmtool.stacktrace.*;
+
+import javax.management.MBeanServerConnection;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,24 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
-
-import javax.management.MBeanServerConnection;
-
-import org.gridkit.jvmtool.GlobHelper;
-import org.gridkit.jvmtool.JmxConnectionInfo;
-import org.gridkit.jvmtool.cli.CommandLauncher;
-import org.gridkit.jvmtool.cli.TimeIntervalConverter;
-import org.gridkit.jvmtool.cli.CommandLauncher.CmdRef;
-import org.gridkit.jvmtool.stacktrace.StackFrame;
-import org.gridkit.jvmtool.stacktrace.StackTraceCodec;
-import org.gridkit.jvmtool.stacktrace.StackTraceWriter;
-import org.gridkit.jvmtool.stacktrace.ThreadDumpSampler;
-import org.gridkit.jvmtool.stacktrace.ThreadMXBeanEx;
-import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
-
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 
 /**
  * Stack capture command.
@@ -181,13 +174,13 @@ public class StackCaptureCmd implements CmdRef {
 
             @Override
             public void write(ThreadSnapshot snap) throws IOException {
-                if (snap.stackTrace().isEmpty() && !retainEmptyTraces) {
+                if (snap.getStackTrace().isEmpty() && !retainEmptyTraces) {
                     return;
                 }
                 // test filter
                 if (frameFilter != null) {
                     boolean match = false;
-                    for(StackFrame e: snap.stackTrace()) {
+                    for(StackFrame e: snap.getStackTrace()) {
                         if (match(e)) {
                             match = true;
                             break;

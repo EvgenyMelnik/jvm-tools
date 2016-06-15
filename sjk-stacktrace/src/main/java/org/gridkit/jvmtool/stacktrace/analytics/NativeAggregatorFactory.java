@@ -15,7 +15,7 @@ class NativeAggregatorFactory implements ThreadDumpAggregator, ThreadDumpAggrega
     @Override
     public void aggregate(ThreadSnapshot threadInfo) {
         ++total;
-        if (threadInfo.stackTrace().isEmpty() || threadInfo.stackTrace().frameAt(0).isNative()) {
+        if (threadInfo.getStackTrace().isEmpty() || threadInfo.getStackTrace().frameAt(0).isNative()) {
             ++matched;
         }
         

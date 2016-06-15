@@ -39,32 +39,42 @@ public class ThreadRecord implements ThreadSnapshot {
     }
     
     @Override
-    public long threadId() {
+    public long getThreadId() {
         return threadId;
     }
-    
+
     @Override
-    public String threadName() {
+    public void setThreadId(long threadId) {
+        this.threadId = threadId;
+    }
+
+    @Override
+    public String getThreadName() {
         return threadName;
     }
     
     @Override
-    public long timestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
-    
+
     @Override
-    public StackFrameList stackTrace() {
+    public void setTimestamp(long timestamp) {
+
+    }
+
+    @Override
+    public StackFrameList getStackTrace() {
         return stackTrace;
     }
     
     @Override
-    public State threadState() {
+    public State getThreadState() {
         return threadState;
     }
 
     @Override
-    public CounterCollection counters() {
+    public CounterArray getCounters() {
         return CounterArray.EMPTY;
     }
 }

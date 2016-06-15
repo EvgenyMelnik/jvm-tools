@@ -15,33 +15,21 @@
  */
 package org.gridkit.jvmtool.cmd;
 
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
+import org.gridkit.jvmtool.GlobHelper;
+import org.gridkit.jvmtool.cli.CommandLauncher;
+import org.gridkit.jvmtool.cli.CommandLauncher.CmdRef;
+import org.gridkit.jvmtool.stacktrace.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.gridkit.jvmtool.GlobHelper;
-import org.gridkit.jvmtool.cli.CommandLauncher;
-import org.gridkit.jvmtool.cli.CommandLauncher.CmdRef;
-import org.gridkit.jvmtool.stacktrace.ReaderProxy;
-import org.gridkit.jvmtool.stacktrace.StackFrame;
-import org.gridkit.jvmtool.stacktrace.StackFrameArray;
-import org.gridkit.jvmtool.stacktrace.StackFrameList;
-import org.gridkit.jvmtool.stacktrace.StackTraceCodec;
-import org.gridkit.jvmtool.stacktrace.StackTraceReader;
-import org.gridkit.jvmtool.stacktrace.StackTraceWriter;
-import org.gridkit.jvmtool.stacktrace.ThreadSnapshot;
-
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 
 /**
  * Stack capture command.
@@ -162,7 +150,7 @@ public class StackDumpCopyCmd implements CmdRef {
 			    ReaderProxy proxy = new ReaderProxy(reader) {
 
                     @Override
-                    public StackFrameList stackTrace() {
+                    public StackFrameList getStackTrace() {
                         return mask(reader.getStackTrace());
                     }
 
@@ -200,7 +188,7 @@ public class StackDumpCopyCmd implements CmdRef {
 
             @Override
             public void write(ThreadSnapshot snap) throws IOException {
-                if (snap.stackTrace().isEmpty() && !retainEmptyTraces) {
+                if (snap.getStackTrace().isEmpty() && !retainEmptyTraces) {
                     return;
                 }
                 
@@ -211,7 +199,7 @@ public class StackDumpCopyCmd implements CmdRef {
                 
                 // thread name filter
                 if (threadFilter != null) {
-                    String tn = snap.threadName();
+                    String tn = snap.getThreadName();
                     tn = tn != null ? tn : "";
                     Boolean r = nameCache.get(tn);
                     if (r == null) {
@@ -226,7 +214,7 @@ public class StackDumpCopyCmd implements CmdRef {
                 // test filter
                 if (frameFilter != null) {
                     boolean match = false;
-                    for(StackFrame e: snap.stackTrace()) {
+                    for(StackFrame e: snap.getStackTrace()) {
                         if (match(e)) {
                             match = true;
                             break;

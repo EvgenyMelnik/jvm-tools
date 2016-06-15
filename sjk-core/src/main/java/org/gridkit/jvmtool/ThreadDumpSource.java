@@ -1,5 +1,10 @@
 package org.gridkit.jvmtool;
 
+import com.beust.jcommander.Parameter;
+import org.gridkit.jvmtool.cli.CommandLauncher;
+import org.gridkit.jvmtool.stacktrace.*;
+import org.gridkit.jvmtool.stacktrace.analytics.*;
+
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.util.Arrays;
@@ -7,23 +12,6 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.gridkit.jvmtool.cli.CommandLauncher;
-import org.gridkit.jvmtool.stacktrace.AbstractFilteringStackTraceReader;
-import org.gridkit.jvmtool.stacktrace.CounterCollection;
-import org.gridkit.jvmtool.stacktrace.ReaderProxy;
-import org.gridkit.jvmtool.stacktrace.StackFrameList;
-import org.gridkit.jvmtool.stacktrace.StackTraceCodec;
-import org.gridkit.jvmtool.stacktrace.StackTraceReader;
-import org.gridkit.jvmtool.stacktrace.analytics.CachingFilterFactory;
-import org.gridkit.jvmtool.stacktrace.analytics.FilteredStackTraceReader;
-import org.gridkit.jvmtool.stacktrace.analytics.ParserException;
-import org.gridkit.jvmtool.stacktrace.analytics.PositionalStackMatcher;
-import org.gridkit.jvmtool.stacktrace.analytics.ThreadSnapshotFilter;
-import org.gridkit.jvmtool.stacktrace.analytics.TimeRangeChecker;
-import org.gridkit.jvmtool.stacktrace.analytics.TraceFilterPredicateParser;
-
-import com.beust.jcommander.Parameter;
 
 public class ThreadDumpSource {
 
@@ -206,7 +194,7 @@ public class ThreadDumpSource {
             return reader.getThreadState();
         }
 
-        public CounterCollection getCounters() {
+        public CounterArray getCounters() {
             return reader.getCounters();
         }
 
