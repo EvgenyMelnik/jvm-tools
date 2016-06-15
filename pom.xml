@@ -68,6 +68,21 @@
     <tag>HEAD</tag>
   </scm>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.as</groupId>
+      <artifactId>jboss-as-ejb-client-bom</artifactId>
+      <version>7.2.0.Final</version>
+      <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.as</groupId>
+      <artifactId>jboss-as-jms-client-bom</artifactId>
+      <version>7.2.0.Final</version>
+      <type>pom</type>
+    </dependency>
+  </dependencies>
+
   <build>
     <pluginManagement>
       <plugins>
